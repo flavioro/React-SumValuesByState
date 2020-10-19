@@ -1,53 +1,39 @@
-import React from "react";
+import React, { useState } from "react";
 
-class Sum extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      // elements: [{ title: "Monaco", amount: 100 }, { title: "Sidney", amount: 300 }],
-      elements: [{ title: "Monaco", amount: 990, id: 1 }],
-      value: "",
-      numberValue: "",
-      totalAmount: 0,
-    };
-    this.handleChangePrice = this.handleChangePrice.bind(this);
-  }
+const Sum = () => {
+  const [ elements, setElements ] = useState([{ title: "Monaco", amount: 990, id: 1}]);
+  const [ totalAmount, setTotalAmount ] = useState(0);
 
-  calculate = () => {
-    let totalAmount = 0;
-    this.state.elements.forEach(item => {
-      totalAmount += item.amount;
-    });
-
-    this.setState({
-      totalAmount
-    })
-  }
-
-  handleChangePrice(price, id, title) {
-    
+  const handleChangePrice = async (price, id, title) => {
     const amount = parseInt(price, 10);
-    let element = { title, amount, id };
-
-    const project = this.state.elements.find(findProject => findProject.id === id)
-    const projectFilter = this.state.elements.filter(findProject => findProject.id !== id)
-    console.log('filter ', projectFilter);
-
-    if (!project) {
-      this.setState({
-        elements: [ ...this.state.elements, element]
-      });
+    let project = { title, amount, id };
+  
+    const projects = elements.find(findProject => findProject.id === id)
+    const projectFilter = elements.filter(findProject => findProject.id !== id)
+    // console.log('filter ', projectFilter);
+  
+    if (!projects) {
+      let projectsNew = elements;
+      projectsNew.push(project);
+      await setElements(projectsNew);
     } else {
-      this.setState({
-        elements: [ ...projectFilter]
-      });
+      await setElements(projectFilter);
     }
-
-
-    this.calculate();
+  
+    calculate();
   }
 
-  render() {
+  const calculate = () => {
+    let sumAmount = 0;
+    elements.forEach(item => sumAmount += item.amount);
+ 
+    // console.log('sumAmount', sumAmount)
+
+    setTotalAmount(sumAmount);
+
+    // console.log('totalAmount', totalAmount);
+  }
+  
     return (
       <div>
         <h3>Cash control 'app'</h3>
@@ -58,7 +44,7 @@ class Sum extends React.Component {
             style={{ width: 70, marginBottom: 2 }}
             type="number"
             value="990"
-            onChange={(e) => this.handleChangePrice(e.target.value, 2, "Eletrico")}
+            onChange={(e) => handleChangePrice(e.target.value, 2, "Eletrico")}
           />
         </li>
 
@@ -67,18 +53,18 @@ class Sum extends React.Component {
             style={{ width: 70, marginBottom: 2 }}
             type="number"
             value="1190"
-            onChange={(e) => this.handleChangePrice(1190, 3, "Interiores")}
+            onChange={(e) => handleChangePrice(1190, 3, "Interiores")}
           />
         </li>
-        {console.log(this.state.elements)}
+        {console.log(elements)}
 
         <p>
-          Total sum: <span>{`$ ${this.state.totalAmount}`}</span>
+          Total sum: <span>{`$ ${totalAmount}`}</span>
         </p>
-        <button onClick={this.calculate} style={{ cursor: "pointer" }}>calculate</button>
+        <button onClick={calculate} style={{ cursor: "pointer" }}>calculate</button>
       </div>
     );
-  }
 }
+
 
 export default Sum;
