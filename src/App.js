@@ -1,26 +1,28 @@
 import React, { useState } from "react";
 
+let elements = [{ title: "Monaco", amount: 990, id: 1}];
+
 const Sum = () => {
-  const [ elements, setElements ] = useState([{ title: "Monaco", amount: 990, id: 1}]);
+  
   const [ totalAmount, setTotalAmount ] = useState(0);
 
-  const handleChangePrice = async (price, id, title) => {
+  const handleChangePrice = (price, id, title) => {
     const amount = parseInt(price, 10);
-    let project = { title, amount, id };
+    const projectCreate = { title, amount, id };
   
-    const projects = elements.find(findProject => findProject.id === id)
-    const projectFilter = elements.filter(findProject => findProject.id !== id)
-    // console.log('filter ', projectFilter);
+    const projectIndex = elements.findIndex(findProject => findProject.id === id)
+    // console.log('projectIndex ', projectIndex);
   
-    if (!projects) {
-      let projectsNew = elements;
-      projectsNew.push(project);
-      await setElements(projectsNew);
-    } else {
-      await setElements(projectFilter);
+    if (projectIndex < 0) {
+      elements.push(projectCreate);
+    } 
+    else {
+      console.log('projectIndex delete', projectIndex);
+      elements.splice(projectIndex, 1);
     }
   
     calculate();
+    // console.log(elements)
   }
 
   const calculate = () => {
@@ -56,7 +58,6 @@ const Sum = () => {
             onChange={(e) => handleChangePrice(1190, 3, "Interiores")}
           />
         </li>
-        {console.log(elements)}
 
         <p>
           Total sum: <span>{`$ ${totalAmount}`}</span>
