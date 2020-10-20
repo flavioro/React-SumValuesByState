@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 
 const Sum = () => {
-  const [ elements, setElements ] = useState([{ title: "Monaco", amount: 990, id: 1}]);
+  let elements = [{ title: "Monaco", amount: 990, id: 1}];
   const [ totalAmount, setTotalAmount ] = useState(0);
 
-  const handleChangePrice = async (price, id, title) => {
+  const handleChangePrice = (price, id, title) => {
     const amount = parseInt(price, 10);
     let project = { title, amount, id };
   
@@ -15,9 +15,9 @@ const Sum = () => {
     if (!projects) {
       let projectsNew = elements;
       projectsNew.push(project);
-      await setElements(projectsNew);
+        elements = projectsNew;
     } else {
-      await setElements(projectFilter);
+        elements = projectFilter;
     }
   
     calculate();
